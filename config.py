@@ -1,12 +1,12 @@
 # paths
-qa_path = '../viclevr'  # directory containing the question and annotation jsons
-train_path = '../viclevr/train'  # directory of training images
-val_path = '../viclevr/val'  # directory of validation images
-test_path = '../viclevr/test'  # directory of test images
+qa_path = '../datasets/viclevr'  # directory containing the question and annotation jsons
+train_path = '../datasets/viclevr/train'  # directory of training images
+val_path = '../datasets/viclevr/val'  # directory of validation images
+test_path = '../datasets/viclevr/test'  # directory of test images
 vocabulary_path = 'vocab.json'  # path where the used vocabularies for question and answers are saved to
 preprocessed_path = './resnet-14x14.h5'  # path where preprocessed features are saved to and loaded from
-json_train_path = "../viclevr/vivqa_train_2017.json"
-json_test_path = "../viclevr/vivqa_test_2017.json"
+json_train_path = "../datasets/viclevr/vivqa_train_2017.json"
+json_test_path = "../datasets/viclevr/vivqa_test_2017.json"
 image_size = (448, 448)
 image_extension = 'png'
 
