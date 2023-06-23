@@ -14,10 +14,17 @@ from data_utils.vqa_image import VQAImages
 class ResNet(nn.Module):
     def __init__(self):
         super(ResNet, self).__init__()
+        # self.model = caffe_resnet.resnet152(pretrained=True)
         self.model = models.resnext50_32x4d(pretrained=True)
 
+        def save_output(module, input, output):
+            self.buffer = output
+
+        self.model.layer4.register_forward_hook(save_output)
+
     def forward(self, x):
-        return self.model(x)
+        self.model(x)
+        return self.buffer
 
 
 def create_vqa_loader(path, extension='png'):
@@ -58,21 +65,31 @@ def main():
         i = j = 0
         for ids, imgs in tqdm(train_loader):
             imgs = imgs.clone().cuda()
-            out = net(imgs)
+            with torch.no_grad():
+                out = net(imgs)
+                out = out.detach().cpu()
 
             j = i + imgs.size(0)
-            features[i:j, :, :] = out.data.cpu().numpy().astype('float16')
+            features[i:j, :, :] = out.numpy().astype('float16')
             image_ids[i:j] = ids.numpy().astype('int32')
             i = j
+
+            del imgs
+            torch.cuda.empty_cache()
 
         for ids, imgs in tqdm(test_loader):
             imgs = imgs.clone().cuda()
-            out = net(imgs)
+            with torch.no_grad():
+                out = net(imgs)
+                out = out.detach().cpu()
 
             j = i + imgs.size(0)
-            features[i:j, :, :] = out.data.cpu().numpy().astype('float16')
+            features[i:j, :, :] = out.numpy().astype('float16')
             image_ids[i:j] = ids.numpy().astype('int32')
             i = j
+
+            del imgs
+            torch.cuda.empty_cache()
 
 
 if __name__ == '__main__':
