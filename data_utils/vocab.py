@@ -10,8 +10,10 @@ import json
 
 logger = logging.getLogger(__name__)
 
+
 def _default_unk_index():
     return 0
+
 
 class Vocab(object):
     """Defines a vocabulary object that will be used to numericalize a field.
@@ -22,6 +24,7 @@ class Vocab(object):
             numerical identifiers.
         itos: A list of token strings indexed by their numerical identifiers.
     """
+
     def __init__(self, json_dirs, max_size=None, min_freq=1, specials=['<pad>', "<sos>", "<eos>", "<unk>"],
                  vectors=None, unk_init=unk_init, vectors_cache=None):
         """Create a Vocab object from a collections.Counter.
@@ -42,7 +45,7 @@ class Vocab(object):
                 to zero vectors; can be any function that takes in a Tensor and
                 returns a Tensor of the same size. Default: torch.Tensor.zero_
             vectors_cache: directory for cached vectors. Default: '.vector_cache'
-        """ 
+        """
         self.make_vocab(json_dirs)
         counter = self.freqs.copy()
         min_freq = max(min_freq, 1)
@@ -179,7 +182,7 @@ class Vocab(object):
                 end_dim = start_dim + v.dim
                 self.vectors[i][start_dim:end_dim] = v[token.strip()]
                 start_dim = end_dim
-            assert(start_dim == tot_dim)
+            assert (start_dim == tot_dim)
 
     def set_vectors(self, stoi, vectors, dim, unk_init=torch.Tensor.zero_):
         """

@@ -11,6 +11,7 @@ from functools import partial
 
 logger = logging.getLogger(__name__)
 
+
 def _infer_shape(f):
     num_lines, vector_dim = 0, None
     for line in f:
@@ -26,6 +27,7 @@ def _infer_shape(f):
             num_lines += 1
     f.seek(0)
     return num_lines, vector_dim
+
 
 class Vectors(object):
     def __init__(self, name, cache=None, url=None, unk_init=None, max_vectors=None):
@@ -53,7 +55,6 @@ class Vectors(object):
         self.dim = None
         self.unk_init = unk_init
         self.cache(name, cache, url=url, max_vectors=max_vectors)
-
 
     def __getitem__(self, token):
         if token in self.stoi:
@@ -204,6 +205,7 @@ class Vectors(object):
         vecs = torch.stack(indices)
         return vecs[0] if to_reduce else vecs
 
+
 class PhoW2V(Vectors):
     url = {
         "word2vec_vi_syllables_100dims": "https://public.vinai.io/word2vec_vi_syllables_100dims.zip",
@@ -217,14 +219,15 @@ class PhoW2V(Vectors):
         name = '{}.txt'.format(name)
         super(PhoW2V, self).__init__(name, url=url, **kwargs)
 
-class ViFastText(Vectors):
 
+class ViFastText(Vectors):
     url_base = 'https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.vi.300.vec.gz'
 
     def __init__(self, **kwargs):
         url = self.url_base
         name = os.path.basename(url)
         super(ViFastText, self).__init__(name, url=url, **kwargs)
+
 
 pretrained_aliases = {
     "fasttext.vi.300d": partial(ViFastText),

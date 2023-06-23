@@ -1,14 +1,14 @@
-import torch
 import h5py
-import torch.nn as nn
+import torch
 import torch.backends.cudnn as cudnn
+import torch.nn as nn
 import torch.utils.data
 import torchvision.models as models
 from tqdm import tqdm
 
 import config
-from data_utils.vivqa_image import ViVQAImages
 from data_utils.utils import get_transform
+from data_utils.vqa_image import VQAImages
 
 
 class ResNet(nn.Module):
@@ -27,9 +27,9 @@ class ResNet(nn.Module):
         return self.buffer
 
 
-def create_vivqa_loader(path):
+def create_vivqa_loader(path, extension='png'):
     transform = get_transform(config.image_size)
-    dataset = ViVQAImages(path, transform=transform)
+    dataset = VQAImages(path, extension=extension, transform=transform)
     data_loader = torch.utils.data.DataLoader(
         dataset,
         batch_size=config.preprocess_batch_size,
@@ -46,7 +46,7 @@ def main():
     net = ResNet().cuda()
     net.eval()
 
-    train_loader = create_vivqa_loader(config.train_path)
+    train_loader = create_vivqa_loader(config.train_path, config.image_extension)
     test_loader = create_vivqa_loader(config.test_path)
     features_shape = (
         len(train_loader.dataset) + len(test_loader.dataset),
@@ -57,7 +57,11 @@ def main():
 
     with h5py.File(config.preprocessed_path, 'w', libver='latest') as fd:
         features = fd.create_dataset('features', shape=features_shape, dtype='float16')
-        coco_ids = fd.create_dataset('ids', shape=(len(train_loader.dataset) + len(test_loader.dataset), ), dtype='int32')
+        image_ids = fd.create_dataset(
+            'ids',
+            shape=(len(train_loader.dataset) + len(test_loader.dataset),),
+            dtype='int32'
+        )
 
         i = j = 0
         for ids, imgs in tqdm(train_loader):
@@ -66,7 +70,7 @@ def main():
 
             j = i + imgs.size(0)
             features[i:j, :, :] = out.data.cpu().numpy().astype('float16')
-            coco_ids[i:j] = ids.numpy().astype('int32')
+            image_ids[i:j] = ids.numpy().astype('int32')
             i = j
 
         for ids, imgs in tqdm(test_loader):
@@ -75,7 +79,7 @@ def main():
 
             j = i + imgs.size(0)
             features[i:j, :, :] = out.data.cpu().numpy().astype('float16')
-            coco_ids[i:j] = ids.numpy().astype('int32')
+            image_ids[i:j] = ids.numpy().astype('int32')
             i = j
 
 

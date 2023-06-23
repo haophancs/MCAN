@@ -1,12 +1,12 @@
-Deep Modular Co-Attention Network for ViVQA
+Deep Modular Co-Attention Network for VQA
 ----
 
-This repository follows the paper [Deep Modular Co-Attention Networks for Visual Question Answering](https://arxiv.org/pdf/1906.10770.pdf) with modification to train on the [ViVQA dataset]() for VQA task in Vietnamese.
+This repository follows the paper [Deep Modular Co-Attention Networks for Visual Question Answering](https://arxiv.org/pdf/1906.10770.pdf) with modification to train on the [VQA dataset]() for VQA task in Vietnamese.
 
-To reproduce the results on the ViVQA dataset, first you need to get the dataset as follow:
+To reproduce the results on the VQA dataset, first you need to get the dataset as follow:
 ```
 gdown --id 1TG2GQna8T7OPOuVw0RalO5WkafTgW6NT
-unzip /content/ViVQA -d /content/ViVQA
+unzip /content/VQA -d /content/VQA
 ```
 
 After that, clone this repo locally then get into UIT-MCAN folder:

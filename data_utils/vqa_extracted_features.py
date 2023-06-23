@@ -7,10 +7,12 @@ import h5py
 import json
 import config
 
-class ViVQA(data.Dataset):
+
+class VQA(data.Dataset):
     """ VQA dataset, open-ended """
+
     def __init__(self, json_path, image_features_path, vocab=None):
-        super(ViVQA, self).__init__()
+        super(VQA, self).__init__()
         with open(json_path, 'r') as fd:
             json_data = json.load(fd)
 
@@ -82,8 +84,10 @@ def get_loader(train_dataset, test_dataset=None):
 
     fold_size = int(len(train_dataset) * 0.2)
 
-    subdatasets = random_split(train_dataset, [fold_size, fold_size, fold_size, fold_size, len(train_dataset) - fold_size*4], generator=torch.Generator().manual_seed(13))
-    
+    subdatasets = random_split(train_dataset,
+                               [fold_size, fold_size, fold_size, fold_size, len(train_dataset) - fold_size * 4],
+                               generator=torch.Generator().manual_seed(13))
+
     folds = []
     for subdataset in subdatasets:
         folds.append(
@@ -96,11 +100,11 @@ def get_loader(train_dataset, test_dataset=None):
 
     if test_dataset:
         test_fold = torch.utils.data.DataLoader(
-                        test_dataset,
-                        batch_size=config.batch_size,
-                        shuffle=True,
-                        pin_memory=True,
-                        num_workers=config.data_workers)
+            test_dataset,
+            batch_size=config.batch_size,
+            shuffle=True,
+            pin_memory=True,
+            num_workers=config.data_workers)
 
         return folds, test_fold
 
