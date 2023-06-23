@@ -12,7 +12,7 @@ image_size = (448, 448)
 image_extension = 'png'
 
 output_features = 2048
-output_size = 7
+output_size = 14
 
 dataset = 'viclevr'
 
