@@ -8,7 +8,7 @@ To reproduce the results on the VQA dataset, first you need to get the dataset a
 git clone https://github.com/haophancs/MCAN.git
 cd MCAN && mkdir -p ../datasets ./saved_models
 gdown 1Zvd8hi-RjE8Bdvd9kJi6JZ0yOK18fJsz
-unzip -q viclevr.zip -d ../datasets/viclevr && rm viclevr.zip
+unzip -q viclevr.zip -d ../datasets/ && rm viclevr.zip
 python3 preprocess-images.py
 ```
 

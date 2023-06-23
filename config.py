@@ -8,7 +8,7 @@ preprocessed_path = './resnet-14x14.h5'  # path where preprocessed features are 
 json_train_path = "../datasets/viclevr/vivqa_train_2017.json"
 json_test_path = "../datasets/viclevr/vivqa_test_2017.json"
 image_size = (448, 448)
-image_extension = 'png'
+image_extension = '.png'
 
 dataset = 'viclevr'
 
