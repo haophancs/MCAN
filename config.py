@@ -5,6 +5,7 @@ val_path = '../datasets/viclevr/val'  # directory of validation images
 test_path = '../datasets/viclevr/test'  # directory of test images
 vocabulary_path = 'vocab.json'  # path where the used vocabularies for question and answers are saved to
 preprocessed_path = './resnet-14x14.h5'  # path where preprocessed features are saved to and loaded from
+preprocessed_batch_size = 32
 json_train_path = "../datasets/viclevr/vivqa_train_2017.json"
 json_test_path = "../datasets/viclevr/vivqa_test_2017.json"
 image_size = (448, 448)
@@ -14,7 +15,7 @@ dataset = 'viclevr'
 
 # training config
 epochs = 30
-batch_size = 64
+batch_size = 32
 initial_lr = 5e-5  # default Adam lr
 lr_halflife = 50000  # in iterations
 data_workers = 0
