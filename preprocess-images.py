@@ -65,6 +65,7 @@ def main():
 
         i = j = 0
         for ids, imgs in tqdm(train_loader):
+            print(imgs.shape)
             imgs = imgs.clone().cuda()
             out = net(imgs)
 
