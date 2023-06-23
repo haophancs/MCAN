@@ -11,6 +11,9 @@ json_test_path_prefix = "../datasets/viclevr/vqa/viclevr_test_"
 image_size = (448, 448)
 image_extension = 'png'
 
+output_features = 2048
+output_size = 7
+
 dataset = 'viclevr'
 
 # training config

@@ -47,7 +47,7 @@ def main():
     net.eval()
 
     train_loader = create_vqa_loader(config.train_path, config.image_extension)
-    test_loader = create_vqa_loader(config.test_path)
+    test_loader = create_vqa_loader(config.test_path, config.image_extension)
     features_shape = (
         len(train_loader.dataset) + len(test_loader.dataset),
         config.output_features,
