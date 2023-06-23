@@ -9,16 +9,16 @@ class VQAImages(data.Dataset):
     def __init__(self, path, extension='png', transform=None):
         super(VQAImages, self).__init__()
         self.path = path
+        self.extension = extension
         self.id_to_filename = self._find_images()
         self.sorted_ids = sorted(self.id_to_filename.keys())  # used for deterministic iteration order
         print('found {} images in {}'.format(len(self), self.path))
-        self.extension = extension
         self.transform = transform
 
     def _find_images(self):
         id_to_filename = {}
         for filename in os.listdir(self.path):
-            if not filename.endswith(self.extension):
+            if not filename.endswith(f'.{self.extension}'):
                 continue
             id_and_extension = filename.split('_')[-1]
             id = int(id_and_extension.split('.')[0])
