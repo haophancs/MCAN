@@ -11,16 +11,13 @@ import config
 class VQA(data.Dataset):
     """ VQA dataset, open-ended """
 
-    def __init__(self, json_path, image_features_path, vocab=None):
+    def __init__(self, json_path_prefix, image_features_path, vocab=None):
         super(VQA, self).__init__()
-        with open(json_path, 'r') as fd:
-            json_data = json.load(fd)
-
         # vocab
-        self.vocab = VQAVocab([json_path]) if vocab is None else vocab
+        self.vocab = VQAVocab([json_path_prefix]) if vocab is None else vocab
 
         # q and a
-        self.questions, self.answers, self.image_ids = self.load_json(json_data)
+        self.questions, self.answers, self.image_ids = self.load_json(json_path_prefix)
 
         # v
         self.image_features_path = image_features_path
@@ -36,14 +33,17 @@ class VQA(data.Dataset):
     def num_tokens(self):
         return len(self.vocab.stoi)
 
-    def load_json(self, json_data):
+    def load_json(self, json_path_prefix):
         questions = []
         answers = []
         image_ids = []
-        for ann in json_data["annotations"]:
-            questions.append(preprocess_question(ann["question"]))
-            answers.append(preprocess_answer(ann["answer"]))
-            image_ids.append(ann["img_id"])
+        question_data = json.load(open(json_path_prefix + 'questions.json'))
+        annotation_data = json.load(open(json_path_prefix + 'annotations.json'))
+        for q_item, a_item in zip(question_data["questions"], annotation_data["annotations"]):
+            assert q_item['question_id'] == a_item['question_id']
+            questions.append(preprocess_question(q_item["question"]))
+            answers.append(preprocess_answer(a_item["multiple_choice_answer"]))
+            image_ids.append(a_item["image_id"])
 
         return questions, answers, image_ids
 
