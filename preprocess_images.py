@@ -15,7 +15,7 @@ class ResNet(nn.Module):
     def __init__(self):
         super(ResNet, self).__init__()
         # self.model = caffe_resnet.resnet152(pretrained=True)
-        self.model = models.resnet152(pretrained=True)
+        self.model = models.resnet152(weights=ResNet152_Weights.IMAGENET1K_V1)
 
         def save_output(module, input, output):
             self.buffer = output
@@ -65,7 +65,6 @@ def main():
 
         i = j = 0
         for ids, imgs in tqdm(train_loader):
-            print(imgs.shape)
             imgs = imgs.clone().cuda()
             out = net(imgs)
 
