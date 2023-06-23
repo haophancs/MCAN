@@ -27,7 +27,7 @@ class ResNet(nn.Module):
         return self.buffer
 
 
-def create_vivqa_loader(path, extension='png'):
+def create_vqa_loader(path, extension='png'):
     transform = get_transform(config.image_size)
     dataset = VQAImages(path, extension=extension, transform=transform)
     data_loader = torch.utils.data.DataLoader(
@@ -46,8 +46,8 @@ def main():
     net = ResNet().cuda()
     net.eval()
 
-    train_loader = create_vivqa_loader(config.train_path, config.image_extension)
-    test_loader = create_vivqa_loader(config.test_path)
+    train_loader = create_vqa_loader(config.train_path, config.image_extension)
+    test_loader = create_vqa_loader(config.test_path)
     features_shape = (
         len(train_loader.dataset) + len(test_loader.dataset),
         config.output_features,

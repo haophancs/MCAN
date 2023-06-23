@@ -2,7 +2,7 @@ import torch
 from torch.utils import data
 from torch.utils.data.dataset import random_split
 from data_utils.utils import preprocess_question, preprocess_answer
-from data_utils.vocab import Vocab
+from data_utils.vqa_vocab import VQAVocab
 import h5py
 import json
 import config
@@ -17,7 +17,7 @@ class VQA(data.Dataset):
             json_data = json.load(fd)
 
         # vocab
-        self.vocab = Vocab([json_path]) if vocab is None else vocab
+        self.vocab = VQAVocab([json_path]) if vocab is None else vocab
 
         # q and a
         self.questions, self.answers, self.image_ids = self.load_json(json_data)

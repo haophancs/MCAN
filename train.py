@@ -9,7 +9,7 @@ import numpy as np
 import pickle
 
 import config
-from data_utils.vocab import Vocab
+from data_utils.vqa_vocab import VQAVocab
 from model.mcan import MCAN
 from data_utils.vqa_extracted_features import VQA, get_loader
 from metric_utils.metrics import Metrics
@@ -95,13 +95,13 @@ def main():
     if os.path.isfile(os.path.join(config.model_checkpoint, "vocab.pkl")):
         vocab = pickle.load(open(os.path.join(config.model_checkpoint, "vocab.pkl"), "rb"))
     else:
-        vocab = Vocab([config.json_train_path, config.json_test_path],
-                      specials=["<pad>", "<sos", "<eos>"], vectors=config.word_embedding)
+        vocab = VQAVocab([config.json_train_path_prefix, config.json_test_path_prefix],
+                         specials=["<pad>", "<sos", "<eos>"], vectors=config.word_embedding)
         pickle.dump(vocab, open(os.path.join(config.model_checkpoint, "vocab.pkl"), "wb"))
 
     metrics.vocab = vocab
-    train_dataset = VQA(config.json_train_path, config.preprocessed_path, vocab)
-    test_dataset = VQA(config.json_test_path, config.preprocessed_path, vocab)
+    train_dataset = VQA(config.json_train_path_prefix, config.preprocessed_path, vocab)
+    test_dataset = VQA(config.json_test_path_prefix, config.preprocessed_path, vocab)
 
     if os.path.isfile(os.path.join(config.model_checkpoint, "folds.pkl")):
         folds, test_fold = pickle.load(open(os.path.join(config.model_checkpoint, "folds.pkl"), "rb"))

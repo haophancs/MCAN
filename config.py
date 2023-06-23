@@ -6,8 +6,8 @@ test_path = '../datasets/viclevr/test'  # directory of test images
 vocabulary_path = 'vocab.json'  # path where the used vocabularies for question and answers are saved to
 preprocessed_path = './resnet-14x14.h5'  # path where preprocessed features are saved to and loaded from
 preprocess_batch_size = 32
-json_train_path = "../datasets/viclevr/vivqa_train_2017.json"
-json_test_path = "../datasets/viclevr/vivqa_test_2017.json"
+json_train_path_prefix = "../datasets/viclevr/vqa/viclevr_train_"
+json_test_path_prefix = "../datasets/viclevr/vqa/viclevr_test_"
 image_size = (448, 448)
 image_extension = 'png'
 

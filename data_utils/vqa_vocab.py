@@ -15,19 +15,19 @@ def _default_unk_index():
     return 0
 
 
-class Vocab(object):
+class VQAVocab(object):
     """Defines a vocabulary object that will be used to numericalize a field.
     Attributes:
         freqs: A collections.Counter object holding the frequencies of tokens
-            in the data used to build the Vocab.
+            in the data used to build the VQAVocab.
         stoi: A collections.defaultdict instance mapping token strings to
             numerical identifiers.
         itos: A list of token strings indexed by their numerical identifiers.
     """
 
-    def __init__(self, json_dirs, max_size=None, min_freq=1, specials=['<pad>', "<sos>", "<eos>", "<unk>"],
+    def __init__(self, json_prefixes, max_size=None, min_freq=1, specials=['<pad>', "<sos>", "<eos>", "<unk>"],
                  vectors=None, unk_init=unk_init, vectors_cache=None):
-        """Create a Vocab object from a collections.Counter.
+        """Create a VQAVocab object from a collections.Counter.
         Arguments:
             counter: collections.Counter object holding the frequencies of
                 each value found in the data.
@@ -39,14 +39,14 @@ class Vocab(object):
                 will be prepended to the vocabulary in addition to an <unk>
                 token. Default: ['<pad>']
             vectors: One of either the available pretrained vectors
-                or custom pretrained vectors (see Vocab.load_vectors);
+                or custom pretrained vectors (see VQAVocab.load_vectors);
                 or a list of aforementioned vectors
             unk_init (callback): by default, initialize out-of-vocabulary word vectors
                 to zero vectors; can be any function that takes in a Tensor and
                 returns a Tensor of the same size. Default: torch.Tensor.zero_
             vectors_cache: directory for cached vectors. Default: '.vector_cache'
         """
-        self.make_vocab(json_dirs)
+        self.make_vocab(json_prefixes)
         counter = self.freqs.copy()
         min_freq = max(min_freq, 1)
 
@@ -75,15 +75,16 @@ class Vocab(object):
         if vectors is not None:
             self.load_vectors(vectors, unk_init=unk_init, cache=vectors_cache)
 
-    def make_vocab(self, json_dirs):
+    def make_vocab(self, json_path_prefixes):
         self.freqs = Counter()
         self.output_cats = set()
         self.max_question_length = 0
-        for json_dir in json_dirs:
-            json_data = json.load(open(json_dir))
-            for ann in json_data["annotations"]:
-                question = preprocess_question(ann["question"])
-                answer = preprocess_answer(ann["answer"])
+        for json_path_prefix in json_path_prefixes:
+            question_data = json.load(open(json_path_prefix + 'questions.json'))
+            annotation_data = json.load(open(json_path_prefix + 'annotations.json'))
+            for q_item, a_item in zip(question_data["questions"], annotation_data["annotations"]):
+                question = preprocess_question(q_item["question"])
+                answer = preprocess_answer(a_item["multiple_choice_answer"])
                 self.freqs.update(question)
                 self.output_cats.add(answer)
                 if len(question) > self.max_question_length:
@@ -186,7 +187,7 @@ class Vocab(object):
 
     def set_vectors(self, stoi, vectors, dim, unk_init=torch.Tensor.zero_):
         """
-        Set the vectors for the Vocab instance from a collection of Tensors.
+        Set the vectors for the VQAVocab instance from a collection of Tensors.
         Arguments:
             stoi: A dictionary of string to the index of the associated vector
                 in the `vectors` input argument.
