@@ -35,7 +35,7 @@ def create_vqa_loader(path, extension='png'):
         batch_size=config.preprocess_batch_size,
         num_workers=config.data_workers,
         shuffle=False,
-        pin_memory=True,
+        pin_memory=False,
     )
     return data_loader
 
