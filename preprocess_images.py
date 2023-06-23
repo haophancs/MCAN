@@ -14,17 +14,10 @@ from data_utils.vqa_image import VQAImages
 class ResNet(nn.Module):
     def __init__(self):
         super(ResNet, self).__init__()
-        # self.model = caffe_resnet.resnet152(pretrained=True)
         self.model = models.resnext50_32x4d(pretrained=True)
 
-        def save_output(module, input, output):
-            self.buffer = output
-
-        self.model.layer4.register_forward_hook(save_output)
-
     def forward(self, x):
-        self.model(x)
-        return self.buffer
+        return self.model(x)
 
 
 def create_vqa_loader(path, extension='png'):
@@ -34,8 +27,7 @@ def create_vqa_loader(path, extension='png'):
         dataset,
         batch_size=config.preprocess_batch_size,
         num_workers=config.data_workers,
-        shuffle=False,
-        pin_memory=False,
+        shuffle=False
     )
     return data_loader
 
