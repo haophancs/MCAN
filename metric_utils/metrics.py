@@ -24,7 +24,9 @@ class Metrics(object):
             "accuracy": acc,
             "precision": pre,
             "recall": recall,
-            "F1": f1
+            "F1": f1,
+            "ground_answers": true,
+            "pred_answers": predicted
         }
 
     def evaluate(self, net, test_dataset, tracker, prefix=''):

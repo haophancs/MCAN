@@ -35,6 +35,9 @@ def run(net, loaders, fold_idx, optimizer, tracker, train=False, prefix='', epoc
         rec_tracker = tracker.track('{}_recall'.format(prefix), tracker_class(**tracker_params))
         f1_tracker = tracker.track('{}_F1'.format(prefix), tracker_class(**tracker_params))
 
+    all_ground_answers = []
+    all_pred_answers = []
+
     for loader in loaders[fold_idx:]:
         tq = tqdm(loader, desc='Epoch {:03d} - {} - Fold {}'.format(epoch, prefix, loaders.index(loader) + 1), ncols=0)
 
@@ -59,6 +62,8 @@ def run(net, loaders, fold_idx, optimizer, tracker, train=False, prefix='', epoc
                 pre_tracker.append(scores["precision"])
                 rec_tracker.append(scores["recall"])
                 f1_tracker.append(scores["F1"])
+                all_ground_answers.append(scores["ground_answers"])
+                all_pred_answers.append(scores["pred_answers"])
 
             fmt = '{:.4f}'.format
             if train:
@@ -83,7 +88,9 @@ def run(net, loaders, fold_idx, optimizer, tracker, train=False, prefix='', epoc
             "accuracy": acc_tracker.mean.value,
             "precision": pre_tracker.mean.value,
             "recall": rec_tracker.mean.value,
-            "F1": f1_tracker.mean.value
+            "F1": f1_tracker.mean.value,
+            "ground_answers": all_ground_answers,
+            "pred_answers": all_pred_answers
         }
     else:
         return loss_tracker.mean.value
@@ -156,6 +163,11 @@ def main():
             },
             'vocab': train_dataset.vocab,
         }
+        with open('ground_and_pred_answers.json', 'w') as f:
+            json.dump({
+                'ground_answers': test_returned["ground_answers"],
+                'pred_answers': test_returned["pred_answers"]
+            }, f, indent=4)
 
         torch.save(results, os.path.join(config.model_checkpoint, f"model_last.pth"))
         if test_returned["F1"] > max_f1:
