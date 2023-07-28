@@ -6,7 +6,7 @@ This repository follows the paper [Deep Modular Co-Attention Networks for Visual
 To reproduce the results on the VQA dataset, first you need to get the dataset as follows:
 ```
 git clone https://github.com/haophancs/MCAN.git
-cd MCAN && mkdir -p ../datasets ./saved_models
+cd MCAN && mkdir -p ./viclevr/datasets ./saved_models
 gdown 1Zvd8hi-RjE8Bdvd9kJi6JZ0yOK18fJsz
 unzip -q viclevr.zip -d ../datasets/ && rm viclevr.zip
 python3 preprocess-images.py
