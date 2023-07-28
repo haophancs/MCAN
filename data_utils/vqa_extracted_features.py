@@ -102,7 +102,7 @@ def get_loader(train_dataset, test_dataset=None):
         test_fold = torch.utils.data.DataLoader(
             test_dataset,
             batch_size=config.batch_size,
-            shuffle=True,
+            shuffle=False,
             pin_memory=True,
             num_workers=config.data_workers)
 
