@@ -62,8 +62,8 @@ def run(net, loaders, fold_idx, optimizer, tracker, train=False, prefix='', epoc
                 pre_tracker.append(scores["precision"])
                 rec_tracker.append(scores["recall"])
                 f1_tracker.append(scores["F1"])
-                all_ground_answers.append(scores["ground_answers"])
-                all_pred_answers.append(scores["pred_answers"])
+                all_ground_answers.extend(scores["ground_answers"])
+                all_pred_answers.extend(scores["pred_answers"])
 
             fmt = '{:.4f}'.format
             if train:
