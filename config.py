@@ -17,7 +17,7 @@ output_size = 14
 dataset = 'viclevr'
 
 # training config
-epochs = 30
+epochs = 1
 batch_size = 32
 initial_lr = 5e-5  # default Adam lr
 lr_halflife = 50000  # in iterations
